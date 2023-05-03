@@ -24,8 +24,10 @@
         if (parseInt(`${device.kind.indexOf("audiooutput")}`)>= 0){
           check_output = true;
           alert("check_output connected");
-        }
+        }else{
+          alert("check_output not connected");
           // console.log(parseInt(`${device.kind.indexOf("audiooutput")}`));
+        }
         });
       })
       .catch((err) => {
