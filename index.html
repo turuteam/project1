@@ -6,22 +6,23 @@
 <button id="myButton"><h1>updatedevice</h1></button>
 
 <script type="text/javascript">
-  document.querySelector("#myButton").addEventListener("click", () => {
-    if (!navigator.mediaDevices.selectAudioOutput) {
-      alert("selectAudioOutput() not supported.");
-      return;
-    }
 
-    // Display prompt and log selected device or error
-    navigator.mediaDevices
-      .selectAudioOutput()
-      .then((device) => {
-        alert(`${device.kind}: ${device.label} id = ${device.deviceId}`);
-      })
-      .catch((err) => {
-        alert(`${err.name}: ${err.message}`);
-      });
-  });
+if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
+  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+
+
+  var oscillator = audioCtx.createOscillator();
+  oscillator.connect(audioCtx.destination);
+  oscillator.start();
+  setTimeout(function() {
+  oscillator.stop();
+  alert('Headphone is connected!');
+  }, 500);
+} 
+else {
+alert('No audio output is available!');
+}
 
 </script>
 
