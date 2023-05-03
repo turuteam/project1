@@ -10,19 +10,16 @@
 
   const updateDevices = () => {
 
-    let headphonesConnected = false;
-    navigator.mediaDevices.enumerateDevices()
-      .then(function(devices) {
-        // check to see if we have any device with "head" in its name connected
-        // like "headset" or "headphones"
-        headphonesConnected = devices
-          .filter(device => /audio\w+/.test(device.kind))
-          .find(device => device.label.toLowerCase().includes('head'))
-        ;
-      })
-    ;
-
-    alert(headphonesConnected);
+    navigator.mediaDevices.enumerateDevices().then(function(MediaDeviceInfo) {
+      var filtered = MediaDeviceInfo.filter(function(device){
+        return device.kind == "audiooutput" || device.kind == "head";
+      });
+      if (filtered.length !== 0) {
+        console.log(`Headphone is plugged in.`);
+      } else {
+        console.log(`Headphone is not plugged in.`);
+      }
+    });
   };
 
   // updateDevices();
