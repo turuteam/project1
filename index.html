@@ -8,31 +8,34 @@
 <script type="text/javascript">
   document.querySelector("#myButton").addEventListener("click", () => {
 
-let check_output = false;
+    var check_output = false;
+
     if (!navigator.mediaDevices?.enumerateDevices) {
       console.log("enumerateDevices() not supported.");
     } else{
 
-    // if (!navigator.mediaDevices.selectAudioOutput) {
-    //   console.log("selectAudioOutput() not supported.");
-    //   return;
-    // }
 
-    // Display prompt and log selected device or error
     navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {
         devices.forEach((device) => {
-        console.log(`${device.kind}: ${device.label} id = ${device.deviceId} , devicelen = ${device.kind.indexOf("audiooutput")}`);
-        if (`${device.kind.indexOf("audiooutput")} >= 0`){
-          alert("connected");
+        // console.log(`${device.kind}: ${device.label} id = ${device.deviceId} , devicelen = ${device.kind.indexOf("audiooutput")}`);
+
+        if (parseInt(`${device.kind.indexOf("audiooutput")}`)>= 0){
+          check_output = true;
+          alert("check_output connected");
         }
+          // console.log(parseInt(`${device.kind.indexOf("audiooutput")}`));
         });
       })
       .catch((err) => {
         console.error(`${err.name}: ${err.message}`);
       });
+
+      // console.log("result" + check_output);
     }
+
+      
   });
 
 
