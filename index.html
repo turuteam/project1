@@ -7,39 +7,21 @@
 
 <script type="text/javascript">
   document.querySelector("#myButton").addEventListener("click", () => {
-
-    var check_output = false;
-
-    if (!navigator.mediaDevices?.enumerateDevices) {
-      console.log("enumerateDevices() not supported.");
-    } else{
-
-
-    navigator.mediaDevices
-      .enumerateDevices()
-      .then((devices) => {
-        devices.forEach((device) => {
-        // console.log(`${device.kind}: ${device.label} id = ${device.deviceId} , devicelen = ${device.kind.indexOf("audiooutput")}`);
-
-        if (parseInt(`${device.kind.indexOf("audiooutput")}`)>= 0){
-          check_output = true;
-          alert("check_output connected");
-        }else{
-          alert("check_output not connected");
-          // console.log(parseInt(`${device.kind.indexOf("audiooutput")}`));
-        }
-        });
-      })
-      .catch((err) => {
-        console.error(`${err.name}: ${err.message}`);
-      });
-
-      // console.log("result" + check_output);
+    if (!navigator.mediaDevices.selectAudioOutput) {
+      alert("selectAudioOutput() not supported.");
+      return;
     }
 
-      
+    // Display prompt and log selected device or error
+    navigator.mediaDevices
+      .selectAudioOutput()
+      .then((device) => {
+        alert(`${device.kind}: ${device.label} id = ${device.deviceId}`);
+      })
+      .catch((err) => {
+        alert(`${err.name}: ${err.message}`);
+      });
   });
-
 
 </script>
 
