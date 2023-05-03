@@ -3,28 +3,38 @@
 </head>
 
 <body>
-<button onclick="updateDevices()"><h1>updatedevice</h1></button>
+<button id="myButton"><h1>updatedevice</h1></button>
 
 <script type="text/javascript">
-  // let's assume we don't have any headphones connected
+  document.querySelector("#myButton").addEventListener("click", () => {
 
-  const updateDevices = () => {
+let check_output = false;
+    if (!navigator.mediaDevices?.enumerateDevices) {
+      console.log("enumerateDevices() not supported.");
+    } else{
 
-    let headphonesConnected = false;
+    // if (!navigator.mediaDevices.selectAudioOutput) {
+    //   console.log("selectAudioOutput() not supported.");
+    //   return;
+    // }
 
-  navigator.mediaDevices.enumerateDevices()
-    .then(function(devices) {
-      // check to see if we have any device with "head" in its name connected
-      // like "headset" or "headphones"
-      headphonesConnected = devices
-        .filter(device => /audio\w+/.test(device.kind))
-        .find(device => device.label.toLowerCase().includes('head'))
-      ;
-    });
+    // Display prompt and log selected device or error
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) => {
+        devices.forEach((device) => {
+        console.log(`${device.kind}: ${device.label} id = ${device.deviceId} , devicelen = ${device.kind.indexOf("audiooutput")}`);
+        if (`${device.kind.indexOf("audiooutput")} >= 0`){
+          alert("connected");
+        }
+        });
+      })
+      .catch((err) => {
+        console.error(`${err.name}: ${err.message}`);
+      });
+    }
+  });
 
-    alert(headphonesConnected);
-}
-  // updateDevices();
 
 </script>
 
