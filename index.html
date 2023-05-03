@@ -7,25 +7,23 @@
 <button type="button" name="button">Test</button>
 
 <script type="text/javascript">
-  'use strict';
-
-  // NOTE The label here is in fact the name of headphone jack's driver,
-  // not the specific headset's device info
-  // TODO Configure this
-  var HEADSET_LABEL = "Headphones (Cirrus Logic CS4208 (AB 126))";
-
-  document.querySelector("button[name='button']").onclick = function(){
-    navigator.mediaDevices.enumerateDevices().then(function(MediaDeviceInfo) {
-      var filtered = MediaDeviceInfo.filter(function(device){
-        return device.kind == "audiooutput";
+if (!navigator.mediaDevices?.enumerateDevices) {
+  console.log("enumerateDevices() not supported.");
+} else {
+  // List cameras and microphones.
+  navigator.mediaDevices
+    .enumerateDevices()
+    .then((devices) => {
+      devices.forEach((device) => {
+        console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
       });
-      if (filtered.length !== 0) {
-        alert(`Headphone ${HEADSET_LABEL} is plugged in.`);
-      } else {
-        alert(`Headphone ${HEADSET_LABEL} is not plugged in.`);
-      }
+    })
+    .catch((err) => {
+      console.error(`${err.name}: ${err.message}`);
     });
-  };
+}
+
+
 </script>
 
 </body>
