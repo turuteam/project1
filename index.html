@@ -31,116 +31,23 @@
 
 	  src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Bold.woff2') format('woff2');
 	}</style>
+	<script src="NoSleep.min.js"></script>
 	<script type="text/javascript">
-		        /* begin 28.04.2023 aysenur */
-        const wakeButton = document.querySelector('[data-status]');
-        let isSupported = false;
-        let wakeLock = null;
-        if ('wakeLock' in navigator) {
-            isSupported = true;
-        } else {
-            wakeButton.disabled = true;
-            console.log('Wake lock is not supported by this browser.');
-        }
+		var noSleep = new NoSleep();
+		function enableNoSleep() {
+		  noSleep.enable();
+		  document.removeEventListener('click', enableNoSleep, false);
+		}
 
-        // change button and status if wakelock becomes aquired or is released
-        const changeUI = (status = 'acquired') => {
-            const acquired = status === 'acquired' ? true : false;
-            wakeButton.dataset.status = acquired ? 'on' : 'off';
-            //console.log(`Turn Wake Lock ${acquired ? 'OFF' : 'ON'}`);
-        }
-
-        const requestWakeLock = async () => {
-            try {
-                wakeLock = await navigator.wakeLock.request('screen');
-
-                // change up our interface to reflect wake lock active
-                changeUI();
-
-                // listen for our release event
-                wakeLock.onrelease = function (ev) {
-                    console.log(ev);
-                }
-                wakeLock.addEventListener('release', () => {
-                    // if wake lock is released alter the button accordingly
-                    changeUI('released');
-                });
-
-            } catch (err) {
-                // if wake lock request fails - usually system related, such as battery
-                wakeButton.dataset.status = 'off';
-                wakeButton.textContent = 'Turn Wake Lock ON';
-                console.log(`${err.name}, ${err.message}`);
-
-            }
-        } // requestWakeLock()
-
-
-        if (isSupported) {
-            requestWakeLock();
-
-            const handleVisibilityChange = () => {
-                if (wakeLock !== null && document.visibilityState === 'visible') {
-                    requestWakeLock();
-                }
-            }
-            document.addEventListener('visibilitychange', handleVisibilityChange);
-        } // isSupported
-        /* end 28.04.2023 aysenur */
+		document.addEventListener('click', enableNoSleep, false);
+		noSleep.disable();
 	</script>
 	</head>
 	<body data-new-gr-c-s-check-loaded="14.1107.0" data-gr-ext-installed=""> 
-		<nav class="is-light navbar"> 
-		<div class="container"> <div class="navbar-brand"> 
-			<a href="https://github.com/bradleyjkemp/nosleep.page" class="navbar-item">nosleep.page</a> 
-		</div> <div id="navMenu" class="navbar-menu">
-			
+		<div class="card-footer-item field mx-auto"> 
+			<input id="preventSleepSwitch" type="checkbox" class="is-large is-rounded is-success switch"> 
+			<label for="preventSleepSwitch">Prevent device sleeping</label> 
 		</div> 
-	</div> 
-	</nav> 
-	<section id="hero" class="hero is-fullheight-with-navbar is-light"> 
-		<div class="columns hero-body is-centered"> 
-			<div class="column is-half-desktop is-one-third-fullhd is-one-third-widescreen is-two-thirds-tablet"> 
-				<div class="card"> 
-					<header class="card-header"> 
-						<p class="card-header-title"> nosleep.page </p> 
-					</header> 
-					<div class="card-content"> 
-						<div class="content"> 
-							<p> This tiny site uses the 
-								<a class="has-text-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API">Screen Wake Lock API</a> to prevent your device from sleeping. 
-							</p> 
-							<p> Where this API isn't supported, an empty silent video is played to emulate this behaviour (using <a class="has-text-link" href="https://github.com/richtr/NoSleep.js">NoSleep.js</a>). 
-							</p> 
-						</div> 
-					</div> 
-					<footer class="card-footer"> 
-						<div class="card-footer-item field mx-auto"> 
-							<input id="preventSleepSwitch" type="checkbox" class="is-large is-rounded is-success switch"> 
-							<label for="preventSleepSwitch">Prevent device sleeping</label> 
-						</div> 
-					</footer> 
-				</div> 
-			</div> 
-		</div> 
-	</section> 
-	<div id="warning-modal" class="modal"> 
-		<div class="modal-background">
-			
-		</div> 
-		<div class="modal-content"> 
-			<div class="is-warning notification"> This site can only prevent your device sleeping if it's in a foreground tab. 
-				<br> 
-				It doesn't need to be <em>visible</em>, but you can't minimise or switch to a different tab within this window. 
-			</div> 
-		</div> 
-		<button class="is-large modal-close" aria-label="close"></button> 
-	</div> 
-	<div id="loom-companion-mv3" ext-id="liecbddmkiiihnedobmlmillhodjkdmb">
-		<section id="shadow-host-companion">
-			
-		</section>
-	</div>
 	</body>
 	<grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
 </html>
