@@ -3,26 +3,29 @@
 </head>
 
 <body>
-<p>Expected outcome: Pressing test reveals if headphone's plugged in / not plugged in</p>
-<button type="button" name="button">Test</button>
+<button onclick="updateDevices()">updatedevice</button>
 
 <script type="text/javascript">
-if (!navigator.mediaDevices?.enumerateDevices) {
-  console.log("enumerateDevices() not supported.");
-} else {
-  // List cameras and microphones.
-  navigator.mediaDevices
-    .enumerateDevices()
-    .then((devices) => {
-      devices.forEach((device) => {
-        console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
-      });
-    })
-    .catch((err) => {
-      console.error(`${err.name}: ${err.message}`);
-    });
-}
+  // let's assume we don't have any headphones connected
 
+  const updateDevices = () => {
+
+    let headphonesConnected = false;
+    navigator.mediaDevices.enumerateDevices()
+      .then(function(devices) {
+        // check to see if we have any device with "head" in its name connected
+        // like "headset" or "headphones"
+        headphonesConnected = devices
+          .filter(device => /audio\w+/.test(device.kind))
+          .find(device => device.label.toLowerCase().includes('head'))
+        ;
+      })
+    ;
+
+    alert(headphonesConnected);
+  };
+
+  // updateDevices();
 
 </script>
 
