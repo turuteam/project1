@@ -7,22 +7,41 @@
 
 <script type="text/javascript">
 
-if (typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined') {
-  var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// Create an AudioContext
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 
 
-  var oscillator = audioCtx.createOscillator();
-  oscillator.connect(audioCtx.destination);
-  oscillator.start();
-  setTimeout(function() {
-  oscillator.stop();
-  alert('Headphone is connected!');
-  }, 500);
-} 
-else {
-alert('No audio output is available!');
-}
+  // Create a GainNode to output the sound
+  const gainNode = audioCtx.createGain();
+  gainNode.connect(audioCtx.destination);
+
+
+
+  // Create an oscillator node to play a sound
+  const oscillatorNode = audioCtx.createOscillator();
+  oscillatorNode.type = 'sine';
+  oscillatorNode.frequency.setValueAtTime(440, audioCtx.currentTime);
+  oscillatorNode.connect(gainNode);
+
+
+
+  // Check if headphones are connected
+  function checkHeadphonesConnected() {
+  const hasHeadphones = audioCtx.destination.maxChannelCount > 0;
+  return hasHeadphones;
+  }
+
+
+
+  // Play sound if headphones are connected, show alert if not
+  if (checkHeadphonesConnected()) {
+  oscillatorNode.start();
+  oscillatorNode.stop(audioCtx.currentTime + 1);
+  alert('Headphones  connected');
+  } else {
+  alert('Headphones not connected');
+  }
 
 </script>
 
