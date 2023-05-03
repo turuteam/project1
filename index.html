@@ -15,9 +15,9 @@
         return device.kind == "audiooutput" || device.kind == "head";
       });
       if (filtered.length !== 0) {
-        console.log(`Headphone is plugged in.`);
+        alert(`Headphone is plugged in.`);
       } else {
-        console.log(`Headphone is not plugged in.`);
+        alert(`Headphone is not plugged in.`);
       }
     });
   };
