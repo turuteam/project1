@@ -1,49 +1,47 @@
-html
 <!DOCTYPE html>
-<html>
-<head>
-<title>Headphone connection test</title>
-</head>
-<body>
-<button id="myButton"><h1>Update Device</h1></button>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check Headphone</title>
+  </head>
+  <body>
+    <button id="play_button">Play</button>
+    <audio src="./Alarm01.wav" style="display: none" id="audio"></audio>
+  </body>
+  <script>
+    var button = document.querySelector("#play_button");
+    var audio = document.querySelector("audio");
 
+    let headphonesConnected = false;
 
+    const updateDevices = () => {
+      navigator.mediaDevices.enumerateDevices().then(function (devices) {
+        // check to see if we have any device with "head" in its name connected
+        // like "headset" or "headphones"
+        headphonesConnected = Boolean(
+          devices
+            .filter((device) => /audio\w+/.test(device.kind))
+            .find((device) => device.label.toLowerCase().includes("head"))
+        );
+      });
+    };
 
-<script type="text/javascript">
-// Create an AudioContext
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    updateDevices();
 
+    // add an ondevicechange event listener so we can tell when
+    // an input device is connected and disconnected
+    navigator.mediaDevices.ondevicechange = updateDevices;
 
+    button.addEventListener("click", () => {
+      alert(headphonesConnected);
+      if (audio.paused) {
+        audio.play();
+        return;
+      }
 
-// Create a GainNode to output the sound
-const gainNode = audioCtx.createGain();
-gainNode.connect(audioCtx.destination);
-
-
-
-// Create an oscillator node to play a sound
-const oscillatorNode = audioCtx.createOscillator();
-oscillatorNode.type = 'sine';
-oscillatorNode.frequency.setValueAtTime(440, audioCtx.currentTime);
-oscillatorNode.connect(gainNode);
-
-
-
-// Function to check the headphone connection status
-function checkHeadphoneConnection() {
-if (audioCtx.destination.maxChannelCount > 0) {
-oscillatorNode.start();
-oscillatorNode.stop(audioCtx.currentTime + 1);
-alert('Headphones connected');
-} else {
-alert('Headphones not connected');
-}
-}
-
-
-
-// Add an event listener to the button to check for headphone connections when clicked
-document.getElementById('myButton').addEventListener('click', checkHeadphoneConnection);
-</script>
-</body>
+      audio.pause();
+    });
+  </script>
 </html>
