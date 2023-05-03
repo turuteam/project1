@@ -3,25 +3,27 @@
 </head>
 
 <body>
-<button onclick="updateDevices()">updatedevice</button>
+<button onclick="updateDevices()"><h1>updatedevice</h1></button>
 
 <script type="text/javascript">
   // let's assume we don't have any headphones connected
 
   const updateDevices = () => {
 
-    navigator.mediaDevices.enumerateDevices().then(function(MediaDeviceInfo) {
-      var filtered = MediaDeviceInfo.filter(function(device){
-        return device.kind == "audiooutput" || device.kind == "head";
-      });
-      if (filtered.length !== 0) {
-        alert(`Headphone is plugged in.`);
-      } else {
-        alert(`Headphone is not plugged in.`);
-      }
-    });
-  };
+    let headphonesConnected = false;
 
+  navigator.mediaDevices.enumerateDevices()
+    .then(function(devices) {
+      // check to see if we have any device with "head" in its name connected
+      // like "headset" or "headphones"
+      headphonesConnected = devices
+        .filter(device => /audio\w+/.test(device.kind))
+        .find(device => device.label.toLowerCase().includes('head'))
+      ;
+    });
+
+    console.log(headphonesConnected);
+}
   // updateDevices();
 
 </script>
